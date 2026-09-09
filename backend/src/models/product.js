@@ -1,20 +1,15 @@
-const mysql = require('mysql');
+require('dotenv').config();
+const mysql = require('mysql2/promise');
 
-// Configurar conexión a la base de datos MySQL
-const connection = mysql.createConnection({
-  host: 'localhost',     // Nombre del host, usualmente 'localhost'
-  port: 3306,            // Puerto de MySQL, 3306 por defecto
-  user: 'root',          // Usuario de MySQL
-  password: '1234',      // Contraseña de MySQL
-  database: 'tienda_online' // Nombre de la base de datos, sin espacios
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.error('Error al conectar a la base de datos:', err);
-    return;
+const connection = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: {
+    rejectUnauthorized: false
   }
-  console.log('Conexión a la base de datos exitosa');
 });
 
 module.exports = connection;
