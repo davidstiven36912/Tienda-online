@@ -1,30 +1,44 @@
 const db = require('../models/product');
 
-// Función para obtener todos los productos
-exports.getAllProducts = (req, res) => {
-  const sql = 'SELECT * FROM productos';
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Error al obtener los productos' });
-      return;
-    }
+// Obtener todos los productos
+exports.getAllProducts = async (req, res) => {
+  try {
+    const [result] = await db.query(
+      'SELECT * FROM productos'
+    );
+
     res.status(200).json(result);
-  });
+
+  } catch (err) {
+    console.error('Error al obtener los productos:', err);
+
+    res.status(500).json({
+      error: 'Error al obtener los productos'
+    });
+  }
 };
 
-// Función para crear un nuevo producto
-exports.createProduct = (req, res) => {
-  const { nombre, descripcion, precio } = req.body;
-  const imagen = req.file ? req.file.path : '';
+// Crear un nuevo producto
+exports.createProduct = async (req, res) => {
+  try {
+    const { name, description, price } = req.body;
+    const imageUrl = req.file ? req.file.path : '';
 
-  const sql = 'INSERT INTO productos (nombre, descripcion, precio, imagen) VALUES (?, ?, ?, ?)';
-  db.query(sql, [nombre, descripcion, precio, imagen], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Error al crear el producto' });
-      return;
-    }
-    res.status(201).json({ message: 'Producto creado exitosamente', id: result.insertId });
-  });
+    const [result] = await db.query(
+      'INSERT INTO productos (name, description, price, imageUrl) VALUES (?, ?, ?, ?)',
+      [name, description, price, imageUrl]
+    );
+
+    res.status(201).json({
+      message: 'Producto creado exitosamente',
+      id: result.insertId
+    });
+
+  } catch (err) {
+    console.error('Error al crear el producto:', err);
+
+    res.status(500).json({
+      error: 'Error al crear el producto'
+    });
+  }
 };
