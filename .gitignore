@@ -9,7 +9,7 @@
 /bazel-out
 
 # Angular cache
-/.angular/cache
+.angular/
 
 # Node
 node_modules/
@@ -68,3 +68,14 @@ Thumbs.db
 # ==========================================
 
 *.log
+
+
+
+
+
+
+
+
+
+
+
